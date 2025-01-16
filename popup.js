@@ -198,11 +198,11 @@ function loaderCarleton(node){
 function injectCarleton(file, login, timetables){
   chrome.tabs.query({ active: true, url: timetables },tab=>{
     if(tab.length>0){
-      chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
+      // chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
         injectScript(tab[0].id, file);
-      })
+      // })
     }
-    else{ // if auto-navigate
+    else{
       chrome.tabs.create({ url: login }, newTab=>{
         chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
           if (chrome.runtime.lastError) {
