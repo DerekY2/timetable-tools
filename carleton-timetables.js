@@ -5,7 +5,7 @@
 //   ottawa
 //   waterloo
 // ```
-// console.log('im here')
+alert('im here')
 chrome.storage.local.get(['carleton'],(results)=>{
   var r;
   if(!results){
