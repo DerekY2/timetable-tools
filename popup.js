@@ -205,6 +205,11 @@ function injectCarleton(file, login, timetables){
     else{ // if auto-navigate
       chrome.tabs.create({ url: login }, newTab=>{
         chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
+          if (chrome.runtime.lastError) {
+            chrome.runtime.sendMessage({action:'logmsg', msg:chrome.runtime.lastError});
+          } else {
+            chrome.runtime.sendMessage({action:'logmsg', msg:"no error storing"});
+          }
           chrome.runtime.sendMessage({ action: 'newCarletonTempTab', tab: newTab, type: 'timetable' }, function(response) {
         });
           injectScript(newTab.id, file);
