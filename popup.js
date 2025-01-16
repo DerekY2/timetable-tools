@@ -203,7 +203,7 @@ function injectCarleton(file, login, timetables){
       })
     }
     else{
-      chrome.tabs.create({ url: login }, newTab=>{
+      // chrome.tabs.create({ url: login }, newTab=>{
         chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
           if (chrome.runtime.lastError) {
             chrome.runtime.sendMessage({action:'logmsg', msg:chrome.runtime.lastError});
@@ -214,7 +214,7 @@ function injectCarleton(file, login, timetables){
         });
           injectScript(newTab.id, file);
         })
-      });
+      // });
     }
   })
 }
