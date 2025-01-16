@@ -171,6 +171,7 @@ showUpdates.addEventListener('click',(e)=>{
 })
 
 function injectScript(tabId, file) {
+  chrome.runtime.sendMessage({action:"popupinjected"});
   chrome.scripting.executeScript({
     target: { tabId: tabId },
     files: [file]
@@ -204,7 +205,8 @@ function injectCarleton(file, login, timetables){
     else{ // if auto-navigate
       chrome.tabs.create({ url: login }, newTab=>{
         chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
-          chrome.runtime.sendMessage({ action: 'newCarletonTempTab', tab: newTab, type:'timetable'});
+          chrome.runtime.sendMessage({ action: 'newCarletonTempTab', tab: newTab, type: 'timetable' }, function(response) {
+        });
           injectScript(newTab.id, file);
         })
       });

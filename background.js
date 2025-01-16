@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if(message.action==='newCarletonTempTab'){
+  if(message.action=='newCarletonTempTab'){
     console.log('new calreotn requested')
     if(message.type=='login'){
       var key='tempLoginCU'
@@ -17,6 +17,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   else if(message.action=='testmsg1'){
     console.log('message received frfr')
+  }
+  else if(message.action=='logmsg'){
+    console.log(message.msg)
+  }
+  else if(message.action=='popupinjected'){
+    console.log('popup: injectScript() works')
   }
 
   else if(message.action==='closeTempTabs'){
@@ -119,6 +125,7 @@ chrome.webNavigation.onCommitted.addListener((details) => {
 });
 
 function injectScript(tabId, file) {
+  console.log('about to re-inject')
   chrome.scripting.executeScript({
     target: { tabId: tabId },
     files: [file]
