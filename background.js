@@ -1,11 +1,11 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if(message.action==='newCarletonTempTab'){
+    console.log('new calreotn requested')
     if(message.type=='login'){
       var key='tempLoginCU'
     }else{
       key = 'tempTimetableCU'
     }
-    console.log('new calreotn requested')
     chrome.storage.session.get(key,(result)=>{
       var temp = result[key]?result[key]:[];
       newTempTab = message.tab
