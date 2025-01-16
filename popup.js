@@ -90,6 +90,7 @@ saveBtns.forEach(b=>{
 
 resetBtns.forEach(b=>{
   b.addEventListener('click',()=>{
+    chrome.runtime.sendMessage({action:"testmsg1"})
     resetTimetable()
   })
 })

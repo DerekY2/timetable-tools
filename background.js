@@ -15,6 +15,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       })
     })
   }
+  else if(message.action=='testmsg1'){
+    console.log('message received frfr')
+  }
 
   else if(message.action==='closeTempTabs'){
     if(message.type=='tempLoginCU'){
