@@ -204,6 +204,7 @@ function injectCarleton(file, login, timetables){
     }
     else{
       chrome.tabs.create({ url: login }, newTab=>{
+        chrome.runtime.sendMessage({action:"logmsg", msg:"newTab successful:\n"+newTab})
         chrome.storage.session.set({['timetable-requested']:[true,'carleton', file]}, ()=>{
           if (chrome.runtime.lastError) {
             chrome.runtime.sendMessage({action:'logmsg', msg:chrome.runtime.lastError});
