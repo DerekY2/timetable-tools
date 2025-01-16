@@ -116,6 +116,9 @@ chrome.webNavigation.onCommitted.addListener((details) => {
         console.log('timetable requested, injected script');
       }
     }
+    else{
+      console.log('no timetable-requested')
+    }
   });
 }, {
   url: [
