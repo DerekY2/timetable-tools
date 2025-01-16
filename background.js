@@ -5,12 +5,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }else{
       key = 'tempTimetableCU'
     }
+    console.log('new calreotn requested')
     chrome.storage.session.get(key,(result)=>{
       var temp = result[key]?result[key]:[];
       newTempTab = message.tab
       temp.push(newTempTab)
       chrome.storage.session.set({[key]: temp},()=>{
-        //console.log('Tracking new,',key,'tab:',newTempTab,'.\nTotal:',temp)
+        console.log('Tracking new,',key,'tab:',newTempTab,'.\nTotal:',temp)
       })
     })
   }
