@@ -409,6 +409,32 @@ function hideBanner(){
   }
 }
 
+// Dynamically populate year-select dropdown for timetable config
+function populateYearSelect() {
+  const yearSelect = document.getElementById('year-select');
+  if (!yearSelect) return;
+  // Clear existing options
+  yearSelect.innerHTML = '';
+  const currentDate = new Date();
+  let year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  // If December, add next year as the latest year
+  if (month === 12) year++;
+  const minYear = 2018;
+  for (let y = year; y >= minYear; y--) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', populateYearSelect);
+} else {
+  populateYearSelect();
+}
+
 function init(){
   chrome.storage.local.get(['privacy_policy_agreement'],(result)=>{
     const p=result['privacy_policy_agreement']
