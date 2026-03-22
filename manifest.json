@@ -7,9 +7,9 @@
   
   "short_name": "Timetable Tools",
 
-  "version": "2.6.0",
+  "version": "2.6.1",
   
-  "description": "Export Timetables",
+  "description": "Export Carleton University Timetables",
  
   "icons": {
     "48": "images/calendar128.png",

@@ -29,10 +29,20 @@
         <ul class="sub-menu">
           <li>
             <a href="#" class="selector carleton require-opened-cu" data-school="carleton" data-url="https://ssoman.carleton.ca/ssomanager/c/SSB?pkg=bwskfshd.P_CrseSchd" data-calendar="https://central.carleton.ca/prod/bwskfshd.P_CrseSchd" data-timetables="https://central.carleton.ca/prod/bwskfshd.P_CrseSchdDetl" data-injection="carleton-timetables.js">
-              <span class="force-active">Carleton</span>                                                                                                                                                                          
+              <span class="force-active">CU Courses</span>                                                                                                                                                                          
               <div class="config-container" data-school="carleton" data-node="timetable-tool">
                 <span class="node-state" data-school="carleton" data-node="timetable-tool">Winter 2025</span>
                 <i class="bx bxs-edit-alt config-btn" data-school="carleton" data-node="timetable-tool"></i>
+              </div>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="selector carleton require-opened-cu" data-school="carleton" data-url="https://central.carleton.ca/prod/env_util.p_central_main" data-timetables="https://central.carleton.ca/prod/pkg_exam_class_list*" data-injection="carleton-exams.js">
+              <span>CU Exams</span>
+              <div class="config-container" data-node="exam-tools">
+                <span class="node-state" data-node="exam-tools">Combined</span>
+                <i class="bx bxs-edit-alt config-btn" data-node="exam-tools"></i>
               </div>
             </a>
           </li>
@@ -125,6 +135,31 @@
         <div class="term-admin-btn config-policy-btn" data-node="timetable-tools"><span >Privacy Policy</span></div>
       </div>
     </div>
+    <!-- Exam schedule configuration overlay -->
+    <div class="exam-tools config-overlay hidden">
+      <div class="config-header">
+        <h3>Exam Schedule</h3>
+        <i class='bx bx-x exam-tools close-btn' data-node="exam-tools"></i>
+      </div>
+
+      <div class="config-vertical">
+        <h3>Export Mode</h3>
+        <div class="config-content more-timetable">
+          <div class="switch-container">
+            <span class="left-span">Individual</span>
+            <input type="checkbox" id="exam-export-mode" data-node="exam-tools" class="toggle-switch"/>
+            <label for="exam-export-mode" data-node="exam-tools" class="toggle-switch"></label>
+            <span>Combined</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-footer">
+        <div class="exam-reset-btn config-reset-btn" data-node="exam-tools"><span>Reset</span></div>
+        <div class="exam-save-btn config-save-btn" data-node="exam-tools"><span>Save</span></div>
+      </div>
+    </div>
+
     <div class="modal privacy-policy-modal hidden">
       <div class="modal-content">
         <h2>Hi there,</h2>

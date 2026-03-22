@@ -42,10 +42,14 @@ const policyModal = document.querySelector(".privacy-policy-modal")
 const policyURL = 'https://github.com/DerekY2/ext-privacy-policies/blob/main/NeuroNest.md'
 const dataPolicyURL = 'https://github.com/DerekY2/ext-privacy-policies/blob/main/NeuroNest.md#data-collection'
 
+const examExportMode = document.getElementById('exam-export-mode');
+const examOverlay = document.querySelector('.exam-tools.config-overlay');
+
 const refresh = {
   'carleton': (e) => refreshTimetable(e),
   'ottawa': (e) => refreshTimetable(e),
-  'waterloo': (e) => refreshTimetable(e)
+  'waterloo': (e) => refreshTimetable(e),
+  'carleton-exams': (e) => refreshExams()
 }
 
 const loader={
@@ -89,13 +93,21 @@ nodeSelectors.forEach(selector =>{
 
 saveBtns.forEach(b=>{
   b.addEventListener('click',()=>{
-    saveTimetable()
+    if (b.dataset.node === 'exam-tools') {
+      saveExams()
+    } else {
+      saveTimetable()
+    }
   })
 })
 
 resetBtns.forEach(b=>{
   b.addEventListener('click',()=>{
-    resetTimetable()
+    if (b.dataset.node === 'exam-tools') {
+      resetExams()
+    } else {
+      resetTimetable()
+    }
   })
 })
 
@@ -107,14 +119,22 @@ presetBtns.forEach(e=>{
 
 closeBtns.forEach(e=>{
   e.addEventListener('click',()=>{
-    closeTimetable()
+    if (e.dataset.node === 'exam-tools') {
+      closeExams()
+    } else {
+      closeTimetable()
+    }
   })
 })
 
 configBtns.forEach(btn => {
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    showTimetable(btn)
+    if (btn.dataset.node === 'exam-tools') {
+      showExams()
+    } else {
+      showTimetable(btn)
+    }
   });
 });
 
@@ -324,6 +344,51 @@ function getDefaultTerm() {
   return [term, year, true];
 }
 
+function showExams(){
+  refreshExams()
+  examOverlay.classList.remove('hidden')
+  darkScreen.classList.remove("hidden");
+}
+
+function saveExams(combined=examExportMode.checked){
+  setLocal('carleton-exams', [combined])
+  hideOverlays()
+}
+
+function refreshExams(){
+  chrome.storage.local.get(['carleton-exams'], (result) => {
+    const config = result['carleton-exams'];
+    if (config) {
+      examExportMode.checked = config[0]==undefined?true:config[0]
+      setExamState(config[0])
+    } else {
+      setExamState(resetExams())
+      saveExams()
+    }
+  });
+}
+
+function setExamState(combined) {
+  const targetState = document.querySelector('.node-state[data-node="exam-tools"]');
+  if (targetState) {
+    targetState.textContent = combined ? 'Combined' : 'Individual';
+  }
+}
+
+function resetExams(){
+  examExportMode.checked = true
+  return true
+}
+
+function closeExams(){
+  examOverlay.classList.add('hidden')
+  darkScreen.classList.add('hidden')
+}
+
+function initExams(){
+  refreshExams()
+}
+
 function closeTimetable(){
   timetableOverlay.classList.add('hidden')
   darkScreen.classList.add('hidden')
@@ -445,5 +510,6 @@ function init(){
     }
   })
   initTimetable()
+  initExams()
 }
 init()
