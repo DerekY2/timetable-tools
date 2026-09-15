@@ -483,8 +483,9 @@ function populateYearSelect() {
   const currentDate = new Date();
   let year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
-  // If December, add next year as the latest year
-  if (month === 12) year++;
+  // Fall and Winter of the same academic year open for registration together,
+  // so once Fall term is available (from August onward), next year's Winter is too.
+  if (month >= 8) year++;
   const minYear = 2018;
   for (let y = year; y >= minYear; y--) {
     const opt = document.createElement('option');
