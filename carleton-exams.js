@@ -49,6 +49,19 @@ chrome.storage.local.get(['carleton-exams', 'privacy_policy_agreement'], (result
     else {
     }
 
+    /**
+     * Hands the .ics file off to the background service worker to save via
+     * chrome.downloads.download(), rather than clicking a synthetic <a download>
+     * element. Anchor-click downloads honour the browser's "ask where to save
+     * each file" setting; on browsers where that's on by default (e.g. Brave),
+     * only the first save dialog in a rapid loop gets a chance to complete and
+     * the rest are dropped. chrome.downloads.download() with saveAs:false always
+     * saves silently, so every exam's calendar downloads regardless of that setting.
+     */
+    function downloadIcs(filename, content) {
+        chrome.runtime.sendMessage({ action: 'download_ics', filename, content });
+    }
+
     function waitForElm(selector) {
         return new Promise(resolve => {
             if (document.querySelector(selector)) {
@@ -218,15 +231,7 @@ chrome.storage.local.get(['carleton-exams', 'privacy_policy_agreement'], (result
             const regTerm = exams[0]['Reg Term'] || '';
             const termLabel = regTerm ? mapTerm(regTerm) : userInfo2;
 
-            const blob = new Blob([icsContent], { type: 'text/calendar' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = termLabel + ' Exams.ics';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            downloadIcs(termLabel + ' Exams.ics', icsContent);
         }
         else {
             let count = 0;
@@ -238,15 +243,7 @@ chrome.storage.local.get(['carleton-exams', 'privacy_policy_agreement'], (result
                 const course = exam['Course'] || '';
                 const section = exam['Section'] || '';
 
-                const blob = new Blob([icsContent], { type: 'text/calendar' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${course}-${section} Exam.ics`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                downloadIcs(`${course}-${section} Exam.ics`, icsContent);
                 count++;
             });
             if (count <= 0) {

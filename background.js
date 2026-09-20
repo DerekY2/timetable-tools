@@ -46,6 +46,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   else if(message.action==='end-timetable-request'){
     chrome.storage.session.set({['timetable-requested']:[false]})
   }
+  else if(message.action==='download_ics'){
+    // saveAs:false forces a silent save regardless of the browser's "ask where to
+    // save each file" setting, so every individual course calendar downloads instead
+    // of only the first one when that setting is on (e.g. Brave).
+    const dataUrl = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(message.content);
+    chrome.downloads.download({
+      url: dataUrl,
+      filename: message.filename,
+      saveAs: false,
+      conflictAction: 'uniquify'
+    }, () => {
+      if (chrome.runtime.lastError) {
+        console.error('Failed to download', message.filename, chrome.runtime.lastError);
+      }
+    });
+  }
   else if(message.action==='log_calendar'){
     const calendar_data = {
       name: message.data[0],

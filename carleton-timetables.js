@@ -248,15 +248,7 @@ chrome.storage.local.get(['carleton', "privacy_policy_agreement"], (results) => 
                     icsContent += 'END:VCALENDAR';
                     //console.log('iCal content generated:', icsContent);
                     if (count > 0) {
-                        const blob = new Blob([icsContent], { type: 'text/calendar' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = userInfo2 + '.ics';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
+                        downloadIcs(userInfo2 + '.ics', icsContent);
                     } else {
                         alert('Nothing to see here...\n\nNeuroNest')
                     }
@@ -325,15 +317,7 @@ chrome.storage.local.get(['carleton', "privacy_policy_agreement"], (results) => 
                         //console.log('iCal content generated:', icsContent);
                         if (count > 0) {
                             totalIcs += icsContent + '\n\n';
-                            const blob = new Blob([icsContent], { type: 'text/calendar' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = `${node.courseCode}-${node.courseSection}` + '.ics';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            URL.revokeObjectURL(url);
+                            downloadIcs(`${node.courseCode}-${node.courseSection}.ics`, icsContent);
                         }
                     });
                     const currentDate = new Date().toLocaleString('en-US', { timeZone: 'America/Toronto', hour12: false });
@@ -378,6 +362,19 @@ chrome.storage.local.get(['carleton', "privacy_policy_agreement"], (results) => 
 
             if (!pa[2]) {
                 updateAgreement([userInfo3, "NeuroNest", pa[1], new Date().toLocaleString('en-US', { timeZone: 'America/Toronto', hour12: false }), pa[0] ? "Yes" : "No"])
+            }
+
+            /**
+             * Hands the .ics file off to the background service worker to save via
+             * chrome.downloads.download(), rather than clicking a synthetic <a download>
+             * element. Anchor-click downloads honour the browser's "ask where to save
+             * each file" setting; on browsers where that's on by default (e.g. Brave),
+             * only the first save dialog in a rapid loop gets a chance to complete and
+             * the rest are dropped. chrome.downloads.download() with saveAs:false always
+             * saves silently, so every course's calendar downloads regardless of that setting.
+             */
+            function downloadIcs(filename, content) {
+                chrome.runtime.sendMessage({ action: 'download_ics', filename, content });
             }
 
             function logCalendar(info) {
